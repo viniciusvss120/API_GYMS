@@ -14,7 +14,7 @@ type SearchGymsResponse = {
 export class SearchGyms {
   constructor(
     private gymsRepository: GymsRepository,
-  ) { }
+  ) {}
 
   async execute({
     query,
