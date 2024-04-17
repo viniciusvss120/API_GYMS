@@ -30,12 +30,16 @@ export class CheckinUseCase {
     userLatitude,
     userLongitude
   }: CheckinUseCaseRequest): Promise<CheckinUseCaseResponse> {
+    // Acima vemos que nesse método recebemos, de dentro da interface CheckinUseCaseRequest, os dados que precisamos pra fazer o check-in e retornamos uma Promise contendo as informações de check-in.
+
+    // Aqui estamos vendo se a academia existe.
     const gym = await this.gymsRepository.findById(gymId)
 
     if (!gym) {
       throw new ResourceNotFound()
     }
 
+    // Aqui utilizamos uma função para validar se a academia em que buscamos fica a 100m do usuário
     const distance = getDistanceBetweenCoordinates(
       { latitude: userLatitude, longitude: userLongitude },
       {
@@ -49,11 +53,14 @@ export class CheckinUseCase {
       throw new MaxDistanceError()
     }
 
+    // Aqui verificamos se o usuário já fez o check-in
     const checkInOnSameDay = await this.checkInsRepository.findByUserIdOnDate(userId, new Date())
-    console.log(userId)
+  
     if (checkInOnSameDay) {
       throw new MaxNumberOfCheckInsError()
     }
+
+    // Caso o usuário não tenha feito o check-in, fazemos um novo check-in
     const checkin = await this.checkInsRepository.create({
       gym_id: gymId,
       user_Id: userId,
