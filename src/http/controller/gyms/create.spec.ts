@@ -13,7 +13,7 @@ describe("Gyms (e2e)", () => {
   });
 
   it("deve conseguir criar uma academia", async () => {
-    const { token } = await createAndAuthenticateUser(app);
+    const { token } = await createAndAuthenticateUser(app, true);
 
     // Acessa o perfil do usuário
     const response = await request(app.server)
